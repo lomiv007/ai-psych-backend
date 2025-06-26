@@ -6,7 +6,7 @@ import OpenAI from "openai";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -18,17 +18,21 @@ const openai = new OpenAI({
 app.post("/api/chat", async (req, res) => {
   try {
     const { message } = req.body;
+
     if (!message) {
-      return res.status(400).json({ error: "No message provided" });
+      return res.status(400).json({ error: "Message is required" });
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // ili koji model koristiš
-      messages: [{ role: "user", content: message }],
-      temperature: 0.7,
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are a helpful AI psychologist." },
+        { role: "user", content: message },
+      ],
     });
 
     const reply = completion.choices[0].message.content;
+
     res.json({ reply });
   } catch (error) {
     console.error("OpenAI API error:", error);
