@@ -1,42 +1,37 @@
-// index.js
-const express = require('express');
-const cors = require('cors');
-const { Configuration, OpenAIApi } = require('openai');
+// server.js
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import OpenAI from 'openai';
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Setup OpenAI
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// POST /chat endpoint
 app.post('/chat', async (req, res) => {
-  const { prompt } = req.body;
-  if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
-
   try {
-    const response = await openai.createChatCompletion({
+    const userMessage = req.body.message;
+
+    const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4',
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: userMessage }],
     });
 
-    res.json({ reply: response.data.choices[0].message.content });
+    const reply = chatCompletion.choices[0].message.content;
+    res.json({ reply });
   } catch (error) {
-    console.error('OpenAI error:', error);
-    res.status(500).json({ error: 'Failed to get response from OpenAI' });
+    console.error('Error in /chat:', error);
+    res.status(500).json({ error: 'Something went wrong.' });
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('AI Psychologist Backend is up!');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
