@@ -1,5 +1,4 @@
 
-
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -11,13 +10,15 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// CORS konfiguracija
+app.use(cors({
+  origin: 'https://vinarijesrbije.rs',
+  methods: ['GET', 'POST', 'OPTIONS'],
+}));
 
-app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post("/api/chat", async (req, res) => {
   try {
