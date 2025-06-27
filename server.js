@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -10,7 +9,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS konfiguracija
+// CORS konfiguracija - dozvoljava frontend domen
 app.use(cors({
   origin: 'https://vinarijesrbije.rs',
   methods: ['GET', 'POST', 'OPTIONS'],
@@ -18,8 +17,15 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
+// Inicijalizacija OpenAI klijenta sa API ključem iz .env
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Test GET endpoint da proveriš da backend radi
+app.get('/', (req, res) => {
+  res.send('AI Psych Backend is running');
+});
+
+// API endpoint za chat
 app.post("/api/chat", async (req, res) => {
   try {
     const { message } = req.body;
@@ -45,6 +51,7 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
+// Start servera
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
