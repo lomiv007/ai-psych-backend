@@ -12,13 +12,14 @@ import { OpenAI } from 'openai';
 
 dotenv.config();
 
-console.log("🔑 MONGO_URI:", MONGO_URI);
 
 const app = express();
 const port = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'tajna';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const MONGO_URI = process.env.MONGO_URI;
+
+console.log("🔑 MONGO_URI:", MONGO_URI);
 
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
@@ -37,6 +38,7 @@ mongoose.connect(MONGO_URI, {
   useUnifiedTopology: true,
 }).then(() => console.log('✅ MongoDB connected'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
+
 
 // 🧠 User model
 const userSchema = new mongoose.Schema({
