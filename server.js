@@ -19,7 +19,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'tajna';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const MONGO_URI = process.env.MONGO_URI;
 
-console.log("🔑 MONGO_URI:", MONGO_URI);
 
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
