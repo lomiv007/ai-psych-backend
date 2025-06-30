@@ -141,3 +141,15 @@ app.post('/api/chat', authMiddleware, async (req, res) => {
 app.get('/', (req, res) => res.send('Nala AI Backend running'));
 
 app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const uri = process.env.MONGODB_URI;
+
+mongoose.connect(uri)
+  .then(() => console.log('✅ MongoDB je povezan'))
+  .catch(err => console.error('❌ Greška pri povezivanju:', err));
+
