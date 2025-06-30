@@ -12,6 +12,8 @@ import { OpenAI } from 'openai';
 
 dotenv.config();
 
+console.log("🔑 MONGO_URI:", MONGO_URI);
+
 const app = express();
 const port = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'tajna';
@@ -141,15 +143,4 @@ app.post('/api/chat', authMiddleware, async (req, res) => {
 app.get('/', (req, res) => res.send('Nala AI Backend running'));
 
 app.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
-
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const uri = process.env.MONGODB_URI;
-
-mongoose.connect(uri)
-  .then(() => console.log('✅ MongoDB je povezan'))
-  .catch(err => console.error('❌ Greška pri povezivanju:', err));
 
